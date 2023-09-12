@@ -1,0 +1,23 @@
+version: "3"
+services:
+  app:
+      environment:
+        - SSH_PUBLIC_KEY=$(cat public_key.pub)
+      build:
+        context: .
+        dockerfile: Dockerfile_app
+      ports:
+        - "5000:5000"
+      ulimits:
+        nproc: 50
+
+  tester:
+      build:
+        context: .
+        dockerfile: Dockerfile_tester
+      ports:
+        - "2222:22"  
+      depends_on:
+        - app
+      volumes:
+        - ./logs:/logs
